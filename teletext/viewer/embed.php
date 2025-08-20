@@ -879,7 +879,7 @@
 <audio autoplay muted></audio>
 
 <?php
-	$audioFiles = glob("../music/pixabay-elevator-music/*.mp3");
+	$audioFiles = glob("../music/*.mp3");
 	$audioBaseFileNames = [];
 	
 	foreach ($audioFiles as $audioFile)
