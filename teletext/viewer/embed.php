@@ -363,6 +363,7 @@
 	const PAGE_SEARCH_SPEED = 180;
 	
 	let urlParams = new URLSearchParams(window.location.search);
+	let pageSearchSpeed = urlParams.has('pageSearchSpeed') ? parseInt(urlParams.get('pageSearchSpeed')) : PAGE_SEARCH_SPEED;
 	let service = urlParams.has('service') ? urlParams.get('service') : "<?php echo DEFAULT_SERVICE; ?>";
 	let recovery = urlParams.has('recovery') ? urlParams.get('recovery') : null;
 	let page = urlParams.has('page') ? urlParams.get('page').toUpperCase() : "100";
@@ -417,9 +418,9 @@
 	}
 	*/
 	
-	$(function () {
-		functionPress(name);
-	});
+	//$(function () {
+	//	functionPress(name);
+	//});
 	
 	function loadNewTeletextPageIntoBuffer(renderOnLoad) {
 		if (xhrLoadNewTeletextPageIntoBuffer) xhrLoadNewTeletextPageIntoBuffer.abort();
@@ -427,7 +428,7 @@
 		xhrLoadNewTeletextPageIntoBuffer = $.ajax({
 			type: "GET",
 			url: "/teletext/viewer/tti_to_svg.php",
-			data: { service: service, recovery: recovery, page: searchPageNumber, resize: resize, pageSearchSpeed: PAGE_SEARCH_SPEED },
+			data: { service: service, recovery: recovery, page: searchPageNumber, resize: resize, pageSearchSpeed: pageSearchSpeed },
 			success: function (response) {
 				clearTimeout(refreshCurrentTeletextPageTimeout);
 				
@@ -440,7 +441,7 @@
 				refreshCurrentTeletextPageTimeout = setTimeout(function() { loadNewTeletextPageIntoBuffer(true); }, 300000);
 			},
 			error: function (response) {
-				if (response.status != "404" && response.status != "500") loadNewTeletextPageIntoBuffer(renderOnLoad);
+				if (response.status != "200" && response.status != "404" && response.status != "500") loadNewTeletextPageIntoBuffer(renderOnLoad);
 			},			
 			timeout: 3000,
 			dataType: "xml"
@@ -470,7 +471,7 @@
 		
 		if (enablePageSearch && pageListBuffer[searchPageNumber.substring(0, 1)].length > 0)
 		{			
-			if (pageSearchIndex == null) pageSearchIndex = initialIndex(pageListBuffer[searchPageNumber.substring(0, 1)].length, PAGE_SEARCH_SPEED);
+			if (pageSearchIndex == null) pageSearchIndex = initialIndex(pageListBuffer[searchPageNumber.substring(0, 1)].length, pageSearchSpeed);
 			currentPageNumber = pageListBuffer[searchPageNumber.substring(0, 1)][pageSearchIndex];
 			
 			//carousel page matches search page, but not ready and loaded in buffer
@@ -510,7 +511,7 @@
 				//}
 				//else
 				//{
-					continuePageSearchTimeout = setTimeout(function() { continuePageSearch(pageSearchIndex); }, PAGE_SEARCH_SPEED);
+					continuePageSearchTimeout = setTimeout(function() { continuePageSearch(pageSearchIndex); }, pageSearchSpeed);
 				//}
 			}
 		}
@@ -964,6 +965,9 @@
 					break;
 				case "s":
 					functionPress("size");
+					break;
+				case "m":
+					functionPress("mute");
 					break;
 				case "{":
 				case "[":

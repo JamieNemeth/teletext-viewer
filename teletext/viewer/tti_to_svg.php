@@ -265,6 +265,7 @@
 	if (!is_null($requestedRecovery) || !is_null($requestedService))
 	{
 		$vbitConfFilename = $requestedRecovery ? "../restorations/tti-teletext-restorations/" . $requestedRecovery . "/vbit.conf" : "../services/" . $requestedService . "/vbit.conf";
+		if (!file_exists($vbitConfFilename)) $vbitConfFilename = "../recoveries/" . $requestedRecovery . "/vbit.conf";
 		
 		if (file_exists($vbitConfFilename))
 		{
@@ -804,18 +805,23 @@
 				$svgForegroundOutput = str_replace("%S", '<tspan id="seconds">%S</tspan>', $svgForegroundOutput);
 				
 				$svgForegroundOutput = preg_replace("/(?<!cla)ss/", '<tspan id="seconds">%S</tspan>', $svgForegroundOutput); //clashed when introducing class to tspans (because "ss" of "class" matched!
+				
+				$svgForegroundOutput = preg_replace("/(?<=<\/tspan>)([^<]+)/", '<tspan>$1</tspan>', $svgForegroundOutput);
 			}
 			
 			//world clock			
 			$svgForegroundOutput = preg_replace("/%t([+-][0-9]{2})/", '<tspan class="world-clock-hours" data-time-shift="$1">HH</tspan>:<tspan class="world-clock-minutes">MM</tspan>', $svgForegroundOutput);
+			
+			//system time			
+			$svgForegroundOutput = str_replace("%%%%%%%%%%%%timedate", '<tspan class="system-time-date"></tspan>', $svgForegroundOutput);
 			
 			$y = SVG_LINE_HEIGHT * (SVG_Y_OFFSET + $ttiOutputLineIndex);
 			
 			if ($doubleHeightFlag) 
 			{		
 				$suppressNextLineFlag = true;
-				return '		<text class="double-height" ' . ($ttiOutputLineIndex == 0 ? 'class="header-row" ' : '') . 'x="' . SVG_X_OFFSET . '" y="' . ($y / 2) . '" data-output-line="' . $ttiOutputLineIndex . '" data-layer="background"><tspan>' . $svgBackgroundOutput . '</tspan></text>'
-			 . '		<text class="double-height" ' . ($ttiOutputLineIndex == 0 ? 'class="header-row" ' : '') . 'x="' . SVG_X_OFFSET . '" y="' . ($y / 2) . '" data-output-line="' . $ttiOutputLineIndex . '" data-layer="foreground"><tspan>' . $svgForegroundOutput . '</tspan>' . str_repeat('</tspan>', $unclosedTspansCount) . '</text>';
+				return '		<text '. ($ttiOutputLineIndex != 0 ? 'class="double-height" ' : '') . ($ttiOutputLineIndex == 0 ? 'class="header-row" ' : '') . 'x="' . SVG_X_OFFSET . '" y="' . ($y / 2) . '" data-output-line="' . $ttiOutputLineIndex . '" data-layer="background"><tspan>' . $svgBackgroundOutput . '</tspan></text>'
+			 . '		<text '. ($ttiOutputLineIndex != 0 ? 'class="double-height" ' : '') . ($ttiOutputLineIndex == 0 ? 'class="header-row" ' : '') . 'x="' . SVG_X_OFFSET . '" y="' . ($y / 2) . '" data-output-line="' . $ttiOutputLineIndex . '" data-layer="foreground"><tspan>' . $svgForegroundOutput . '</tspan>' . str_repeat('</tspan>', $unclosedTspansCount) . '</text>';
 			}
 			
 			return '		<text ' . ($ttiOutputLineIndex == 0 ? 'class="header-row" ' : '') . 'x="' . SVG_X_OFFSET . '" y="' . $y . '" data-output-line="' . $ttiOutputLineIndex . '" data-layer="background"><tspan>' . $svgBackgroundOutput . '</tspan></text>' . PHP_EOL
@@ -928,7 +934,7 @@
 		//if (!is_null($requestedService) && ctype_xdigit($requestedPage) && isset($subpages))
 		if (!empty($subpages))
 		{
-			$subpagesCount = count($subpages);
+			$subpagesCount = $headerOnly ? 1 : count($subpages);
 			for ($s = 0; $s < $subpagesCount; $s++) 
 			{	
 				$outputSubpage = $outputSubpages[$s];
@@ -1015,6 +1021,21 @@
 					worldClockHours[i].innerHTML = ("0" + newTime.getUTCHours()).substr(-2);
 					worldClockMinutes[i].innerHTML = ("0" + newTime.getUTCMinutes()).substr(-2);
 				}
+			}
+			
+			function updateSystemTimeDate() {
+				let date = new Date();
+				let yy = ("0" + date.getYear()).substr(-2);
+				let mm = ("0" + (date.getMonth() + 1)).substr(-2);
+				let dd = ("0" + date.getDate()).substr(-2);
+				let ee = (" " + date.getDate()).substr(-2);
+				let hours = ("0" + date.getHours()).substr(-2);
+				let minutes = ("0" + date.getMinutes()).substr(-2);
+				let seconds = ("0" + date.getSeconds()).substr(-2);
+				
+				let svg = document.querySelectorAll("svg[id='<?php echo $randomId; ?>']")[0];
+				let systemTimeDate = svg.querySelectorAll("tspan.system-time-date");
+				systemTimeDate[0].innerHTML = threeLetterWeekday[date.getDay()] + " " + dd + " " + threeLetterMonth[date.getMonth()] + " " + hours + ":" + minutes + "/" + seconds;
 			}
 		
 			function updateAllTimesDates() {
@@ -1106,6 +1127,7 @@
 				}
 				
 				updateWorldClockTimes();
+				updateSystemTimeDate();
 				
 				if (typeof externalUpdateCurrentSubpageIndex === "function") externalUpdateCurrentSubpageIndex(subpageIndex, numberOfSubpages);
 			}
