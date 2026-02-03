@@ -418,10 +418,6 @@
 	}
 	*/
 	
-	//$(function () {
-	//	functionPress(name);
-	//});
-	
 	function loadNewTeletextPageIntoBuffer(renderOnLoad) {
 		if (xhrLoadNewTeletextPageIntoBuffer) xhrLoadNewTeletextPageIntoBuffer.abort();
 		

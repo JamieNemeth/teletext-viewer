@@ -74,7 +74,7 @@
 
 	$requestedService = $_GET['service'] ?? null;
 	$requestedRecovery = $_GET['recovery'] ?? null;
-	$requestedPage = strtoupper($_GET['page']) ?? "100";
+	$requestedPage = strtoupper($_GET['page'] ?? null) ?? "100";
 	$requestedMagazine = substr($requestedPage, 0, 1);
 	$requestedSubpage = $_GET['subpage'] ?? null;
 	$pageSearchSpeed = $_GET['pageSearchSpeed'] ?? 180;
@@ -1035,7 +1035,7 @@
 				
 				let svg = document.querySelectorAll("svg[id='<?php echo $randomId; ?>']")[0];
 				let systemTimeDate = svg.querySelectorAll("tspan.system-time-date");
-				systemTimeDate[0].innerHTML = threeLetterWeekday[date.getDay()] + " " + dd + " " + threeLetterMonth[date.getMonth()] + " " + hours + ":" + minutes + "/" + seconds;
+				if (systemTimeDate.length) systemTimeDate[0].innerHTML = threeLetterWeekday[date.getDay()] + " " + dd + " " + threeLetterMonth[date.getMonth()] + " " + hours + ":" + minutes + "/" + seconds;
 			}
 		
 			function updateAllTimesDates() {
@@ -1105,31 +1105,33 @@
 			var pageRotationTimeout = null;
 			
 			function pageRotation(svgId, subpageIndex, loop) {
-				let svg = document.querySelectorAll("svg[id='" + svgId + "']")[0];
-				let subpages = svg.querySelectorAll("g.subpage");
-				let numberOfSubpages = subpages.length;
-				
-				for (let s = 0; s < numberOfSubpages; s++) {
-					subpages[s].classList.remove("current-subpage");
+				let svg = document.querySelectorAll("svg[id='" + svgId + "']")
+				if (svg.length) {
+					let subpages = svg[0].querySelectorAll("g.subpage");
+					let numberOfSubpages = subpages.length;
+					
+					for (let s = 0; s < numberOfSubpages; s++) {
+						subpages[s].classList.remove("current-subpage");
+					}
+					
+					let currentSubpage = subpages[subpageIndex];
+					currentSubpage.classList.add("current-subpage");
+					let cycleTime = currentSubpage.dataset.subpageCycleTime * 1000;
+					let nextSubpageIndex = subpageIndex + 1;
+					if (nextSubpageIndex >= numberOfSubpages) nextSubpageIndex = 0;
+					
+					if (loop) {
+						pageRotationTimeout = setTimeout(function() { pageRotation(svgId, nextSubpageIndex, true); }, cycleTime);
+					}
+					else {
+						clearTimeout(pageRotationTimeout);
+					}
+					
+					updateWorldClockTimes();
+					updateSystemTimeDate();
+					
+					if (typeof externalUpdateCurrentSubpageIndex === "function") externalUpdateCurrentSubpageIndex(subpageIndex, numberOfSubpages);
 				}
-				
-				let currentSubpage = subpages[subpageIndex];
-				currentSubpage.classList.add("current-subpage");
-				let cycleTime = currentSubpage.dataset.subpageCycleTime * 1000;
-				let nextSubpageIndex = subpageIndex + 1;
-				if (nextSubpageIndex >= numberOfSubpages) nextSubpageIndex = 0;
-				
-				if (loop) {
-					pageRotationTimeout = setTimeout(function() { pageRotation(svgId, nextSubpageIndex, true); }, cycleTime);
-				}
-				else {
-					clearTimeout(pageRotationTimeout);
-				}
-				
-				updateWorldClockTimes();
-				updateSystemTimeDate();
-				
-				if (typeof externalUpdateCurrentSubpageIndex === "function") externalUpdateCurrentSubpageIndex(subpageIndex, numberOfSubpages);
 			}
 			
 			<?php
