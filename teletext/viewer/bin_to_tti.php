@@ -1,9 +1,9 @@
 <?php
 	try 
 	{		
-		$service = isset($_GET['service']) ? trim($_GET['service']) : "";
-		$recovery = isset($_GET['recovery']) ? trim($_GET['recovery']) : null;
-		$page = isset($_GET['page']) ? trim($_GET['page']) : "";
+		$service = isset($_GET['service']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', trim($_GET['service'])) : "";
+		$recovery = isset($_GET['recovery']) ? preg_replace('/[^\(\)a-zA-Z0-9_-]/', '', trim($_GET['recovery'])) : null;
+		$page = isset($_GET['page']) ? strtoupper(preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['page']) ?? null) : "";
 		$binToTtiEcho = isset($binToTtiEcho) ? $binToTtiEcho : true;
 		
 		if ($binToTtiEcho)

@@ -34,9 +34,9 @@
 
 	try 
 	{
-		$service = isset($_GET['service']) ? trim($_GET['service']) : "";
-		$recovery = isset($_GET['recovery']) ? trim($_GET['recovery']) : null;
-		$magazine = isset($_GET['magazine']) ? trim($_GET['magazine']) : "";
+		$service = isset($_GET['service']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', trim($_GET['service'])) : "";
+		$recovery = isset($_GET['recovery']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', trim($_GET['recovery'])) : null;
+		$magazine = isset($_GET['magazine']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', trim($_GET['magazine'])) : "";
 		$repeatIndexPage = !isset($_GET['noRepeatIndex']);
 		
 		if (($recovery != null || $service != "") && $magazine != "")

@@ -72,16 +72,16 @@
 		}
 	}
 
-	$requestedService = $_GET['service'] ?? null;
-	$requestedRecovery = $_GET['recovery'] ?? null;
-	$requestedPage = strtoupper($_GET['page'] ?? null) ?? "100";
+	$requestedService = isset($_GET['service']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', trim($_GET['service'])) : "";
+	$requestedRecovery = isset($_GET['recovery']) ? preg_replace('/[^\(\)a-zA-Z0-9_-]/', '', trim($_GET['recovery'])) : null;
+	$requestedPage = isset($_GET['page']) ? strtoupper(preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['page']) ?? null) : "100";
 	$requestedMagazine = substr($requestedPage, 0, 1);
-	$requestedSubpage = $_GET['subpage'] ?? null;
-	$pageSearchSpeed = $_GET['pageSearchSpeed'] ?? 180;
+	$requestedSubpage = isset($_GET['subpage']) ? preg_replace('/[^0-9]/', '', $_GET['subpage']) : null;
+	$pageSearchSpeed = isset($_GET['pageSearchSpeed']) ? preg_replace('/[^0-9]/', '', $_GET['pageSearchSpeed']) : 180;
 	
 	$headerOnly = isset($_GET['headeronly']) ? true : false;
 	
-	$resize = isset($_GET['resize']) ? $_GET['resize'] : "0";
+	$resize = isset($_GET['resize']) ? preg_replace('/[^0-9]/', '', $_GET['resize']) : "0";
 	
 	$randomId = "svg" . random_int(0, PHP_INT_MAX);
 	
@@ -1093,10 +1093,10 @@
 					let targetSvgHeaderRowTextElement = headerRowTextElements[i];
 					
 					let currentPageNumberTspanElement = targetSvgHeaderRowTextElement.querySelectorAll("tspan#currentPageNumber")[0];
-					if (currentPageNumberTspanElement !== undefined) currentPageNumberTspanElement.innerHTML = "<?php echo $requestedPage; ?>";
+					if (currentPageNumberTspanElement !== undefined) currentPageNumberTspanElement.innerHTML = "<?php echo htmlspecialchars($requestedPage); ?>";
 					
 					let searchPageNumberTspanElement = targetSvgHeaderRowTextElement.querySelectorAll("tspan#searchPageNumber")[0];
-					if (searchPageNumberTspanElement !== undefined) searchPageNumberTspanElement.innerHTML = "P" + "<?php echo $requestedPage; ?>" + "&#160;&#160;&#160;&#160;";
+					if (searchPageNumberTspanElement !== undefined) searchPageNumberTspanElement.innerHTML = "P" + "<?php echo htmlspecialchars($requestedPage); ?>" + "&#160;&#160;&#160;&#160;";
 				}
 			}
 			
@@ -1140,7 +1140,7 @@
 				{
 					if (isset($requestedSubpage))
 					{
-						echo 'pageRotation("' . $randomId . '", ' . $requestedSubpage . ', false);';
+						echo 'pageRotation("' . $randomId . '", ' . htmlspecialchars($requestedSubpage) . ', false);';
 					}
 					//else if ($headerOnly || count($subpages) == 1)
 					else if ($headerOnly) // loop anyway, for world clock to run, even if subpage count is 1 

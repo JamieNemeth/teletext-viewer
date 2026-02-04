@@ -43,10 +43,10 @@
 				#teletextremote {
 					background-image: linear-gradient(darkgrey, grey);
 					width: 160px;
-					height: 380px;
+					height: 400px;
 					margin: 16px;
 					border-radius: 14px;
-					padding-top: 30px;
+					padding: 30px 0 0 0;
 				}
 				
 				#remotebuttoncontainer {
@@ -61,18 +61,19 @@
 					display: flex;
 					flex-wrap: wrap;
 					justify-content: center;
+					margin-top: 8px;
 				}
 				
-				.remotebutton {
+				.remote-button {
 					font-family: 'Titillium Web';
 					line-height: 160%;
 					font-size: 100%;
 					color: white;
 					display: flex;
 					background-image: linear-gradient(darkgrey, black);
-					height: 42px;
 					flex: 0 0 42px;
-					margin: 2px 2px;			
+					aspect-ratio: 1;
+					margin: 2px 2px;
 					border-radius: 100%;
 					border: 1px solid grey;
 					justify-content: center;
@@ -80,7 +81,7 @@
 					cursor: pointer;
 				}
 				
-				.remotebuttongap {
+				.remote-button-gap {
 					display: flex;
 					height: 42px;
 					flex: 0 0 42px;
@@ -95,88 +96,45 @@
 					height: 20px;
 				}
 				
-				.fastextbutton {
-					font-family: 'Titillium Web';
-					line-height: 160%;
-					color: white;
-					display: flex;
-					height: 30px;
+				.remote-button-fastext {
 					flex: 0 0 30px;
-					margin: 2px 2px;			
-					border-radius: 100%;
-					border: 1px solid grey;
-					justify-content: center;
-					align-items: center;
-					cursor: pointer;
 					font-size: 0;
 				}
 				
-				.functionbutton {
-					font-family: 'Titillium Web';
-					line-height: 160%;
-					font-size: 100%;
-					color: white;
-					display: flex;
-					background-image: linear-gradient(darkgrey, black);
-					height: 30px;
+				.remote-button-function {
 					flex: 0 0 30px;
-					margin: 2px 2px;
-					padding-left: 1px;
-					border-radius: 100%;
-					border: 1px solid grey;
-					justify-content: center;
-					align-items: center;
-					cursor: pointer;
 				}
 				
-				.functionbutton[data-name='index'] {
+				.remote-button-function[data-name='index'] {
 					font-family: 'Times New Roman';
 					font-weight: bold;
 					font-style: italic;
 				}
 				
-				.functionbuttongap {
+				.remote-button-function-gap {
 					display: flex;
 					height: 30px;
 					flex: 0 0 30px;
 					margin: 2px 2px;
+					background-image: unset;
 					border-radius: 100%;
-					border: 1px solid grey;
+					border: 1px solid transparent;
 					justify-content: center;
 					align-items: center;
-					cursor: pointer;
+					cursor: default;
 					font-size: 0;
 				}
 
-				.remoteextrabutton {
-					font-family: 'xbmc_teletext';
-					color: white;
-					display: flex;
-					background-image: linear-gradient(darkgrey, black);
-					height: 42px;
-					flex: 0 0 42px;
-					margin: 2px 2px;			
+				.remote-button-extra {
 					border-radius: 20%;
-					border: 1px solid grey;
-					justify-content: center;
-					align-items: center;
-					cursor: pointer;
+					padding-bottom: 3px;
 				}
 				
-				.remoteextrabuttongap {
-					display: flex;
-					height: 42px;
-					flex: 0 0 42px;
-					margin: 2px 2px;
-					border-radius: 100%;
-					border: 1px solid grey;
-					justify-content: center;
-					align-items: center;
-					cursor: pointer;
+				.remote-button-extra-gap {
 					font-size: 0;
 				}
 				
-				.remoteextrabutton svg {
+				.remote-button-extra svg {
 					width: 60%;
 					height: 60%;
 				}
@@ -206,40 +164,48 @@
 					screen and (max-height: 600px) and (any-hover: none) and (orientation: landscape)
 					{
 					
-					.remotebuttongap, .remoteextrabuttongap, .remoteverticalspacer {
+					.remote-button {
+						flex: 0 0 12%;
+					}
+					
+					.remote-button-function {
+						margin-top: 9px;
+						padding-left: 1px;
+						padding-bottom: 1px;
+						flex: 0 0 9%;
+					}
+					
+					.remote-button-extra {
+						flex: 0 0 13%;
+					}
+					
+					.remote-button-gap, .remote-button-extra-gap, .remoteverticalspacer {
 						display: none;
 					}
 					
 					#teletextremote {
-						width: 340px;
-						height: 150px;
-						border-radius: 14px;
-						padding-top: 6px;
-						padding-left: 4px;
-						padding-bottom: 6px;
+						width: 100%;
+						max-width: 340px;
+						height: auto;
+						padding: 6px 0;
+					}
+					
+					#remotebuttoncontainer, #remoteextrabuttoncontainer {
+						width: 100%;
+						max-width: 340px;
+						flex-wrap: wrap;
+						margin: 0 auto;
+						padding: 0 0 0 6px;
 					}
 					
 					#remotebuttoncontainer {
-						width: 340px;
-						display: flex;
-						flex-wrap: wrap;
 						justify-content: left;
 					}
 					
 					#remoteextrabuttoncontainer {
-						width: 340px;
-						display: flex;
-						flex-wrap: wrap;
 						justify-content: right;
-						margin-top: -48px;
-						margin-left: -4px;
-					}
-					
-					.fastextbutton, .functionbutton, .functionbuttongap {
-						height: 42px;
-						flex: 0 0 42px;
-					}
-				
+						margin: -11% 0 0 -3%;
+					}				
 				}
 			STR;
 		}
@@ -283,16 +249,6 @@
 					aspect-ratio: 1.22;
 				}
 				
-				#teletextremote {
-					background-image: linear-gradient(darkgrey, grey);
-					width: 160px;
-					height: 380px;
-					margin: 0px 16px 0px 4px;
-					border-radius: 14px;
-					padding-top: 30px;
-					filter: drop-shadow(10px 10px 4px rgba(0, 0, 0, 0.4));
-				}
-				
 				@media screen and (max-width: 900px) and (any-hover: hover),
 					screen and (max-width: 900px) and (any-hover: none) and (orientation: portrait) {
 					
@@ -319,38 +275,6 @@
 					screen and (max-height: 600px) and (any-hover: none) and (orientation: landscape)
 					{
 					
-					.remotebuttongap, .remoteverticalspacer {
-						display: none;
-					}
-					
-					#teletextremote {
-						width: 340px;
-						height: 150px;
-						border-radius: 14px;
-						padding-top: 6px;
-						padding-left: 4px;
-						padding-bottom: 6px;
-					}
-					
-					#remotebuttoncontainer {
-						width: 340px;
-						display: flex;
-						flex-wrap: wrap;
-						justify-content: left;
-					}
-					
-					#remoteextrabuttoncontainer {
-						width: 340px;
-						display: flex;
-						flex-wrap: wrap;
-						justify-content: right;
-						margin-top: -48px;
-						margin-left: -4px;
-					}
-					
-					.fastextbutton, .functionbutton, .functionbuttongap {
-						height: 42px;
-						flex: 0 0 42px;
 					}
 			STR;
 		}
@@ -367,9 +291,13 @@
 	let service = urlParams.has('service') ? urlParams.get('service') : "<?php echo DEFAULT_SERVICE; ?>";
 	let recovery = urlParams.has('recovery') ? urlParams.get('recovery') : null;
 	let page = urlParams.has('page') ? urlParams.get('page').toUpperCase() : "100";
+	let instantLoad = urlParams.has('instantLoad');
+	let browsableSubpages = urlParams.has('browsableSubpages');
+	
 	var currentPageNumber = page;
 	var searchPageNumber = page;
 	var searchDisplayedPageNumber = page;
+	var showSubpageNumber = true;
 	
 	var pageListBuffer = null;
 	var serviceListBuffer = null;
@@ -447,18 +375,31 @@
 	function renderNewTeletextPageFromBuffer() {			
 		clearTimeout(pageRotationTimeout);
 		$("div#teletextscreen").html(bufferedSvg);
+		if (browsableSubpages) {
+			let svg = $("div#teletextscreen").find("svg");
+			pageRotation(svg.attr("id"), 0, false);
+			currentPageNumber = searchPageNumber;
+			showSubpageNumber = true;
+			updateSearchPageNumberInHeader();
+		}
 	}	
 	
 	function beginPageSearch(bypass)
 	{
-		enablePageSearch = true;
-		refreshHeaderBeforePageSearch(
-			function () {
-				$("div#teletextscreen").find("svg").find("text.header-row > tspan:not([fill]):first-child").css("fill", "lime");
-				continuePageSearch();
-				loadNewTeletextPageIntoBuffer(false);
-			}
-		);
+		if (instantLoad) {
+			loadNewTeletextPageIntoBuffer(true);
+		}
+		else {
+			enablePageSearch = true;
+			showSubpageNumber = false;
+			refreshHeaderBeforePageSearch(
+				function () {
+					$("div#teletextscreen").find("svg").find("text.header-row > tspan:not([fill]):first-child").css("fill", "lime");
+					continuePageSearch();
+					loadNewTeletextPageIntoBuffer(false);
+				}
+			);
+		}
 	}
 	
 	function continuePageSearch(pageSearchIndex) 
@@ -532,7 +473,16 @@
 	
 	function updateSearchPageNumberInHeader()
 	{
-		$("tspan#searchPageNumber").html("P" + searchDisplayedPageNumber + "&nbsp;&nbsp;&nbsp;&nbsp;");
+		let svg = $("div#teletextscreen").find("svg");
+		let totalSubpageNumber = svg.find("g.subpage").length;
+		
+		if (browsableSubpages && totalSubpageNumber > 1 && showSubpageNumber) {
+			let currentSubpageIndex = parseInt(svg.find("g.current-subpage").data("subpageIndex"));
+			$("tspan#searchPageNumber").html("P" + searchDisplayedPageNumber + "/" + (currentSubpageIndex + 1).toString().padStart(2, "0") + "&nbsp;");
+		}
+		else {
+			$("tspan#searchPageNumber").html("P" + searchDisplayedPageNumber + "&nbsp;&nbsp;&nbsp;&nbsp;");
+		}
 	}
 	
 	function updateCurrentPageNumberInHeader()
@@ -544,7 +494,9 @@
 	{
 		searchPageNumber = currentPageNumber;
 		searchDisplayedPageNumber = currentPageNumber;
-		$("tspan#searchPageNumber").html("P" + currentPageNumber + "&nbsp;&nbsp;&nbsp;&nbsp;");
+		showSubpageNumber = true;
+		//$("tspan#searchPageNumber").html("P" + currentPageNumber + "&nbsp;&nbsp;&nbsp;&nbsp;");
+		updateSearchPageNumberInHeader();
 	}
 	
 	function digitPress(digit)
@@ -556,6 +508,7 @@
 			case 3:
 				if (digit >= 1 && digit <= 8)
 				{
+					showSubpageNumber = false;
 					cancelPageSearch();
 					searchPageNumber = digit;
 					searchDisplayedPageNumber = searchPageNumber + "--";
@@ -563,12 +516,14 @@
 				}
 				break;
 			case 1:
+				showSubpageNumber = false;
 				cancelPageSearch();
 				searchPageNumber = searchPageNumber + "" + digit;
 				searchDisplayedPageNumber = searchPageNumber + "-";
 				resetIncompletePageSearchTimeout = setTimeout(function() { resetIncompletePageSearch(); }, 5000);
 				break;
 			case 2:
+				showSubpageNumber = false;
 				cancelPageSearch();
 				searchPageNumber = searchPageNumber + "" + digit;
 				searchDisplayedPageNumber = searchPageNumber;
@@ -597,24 +552,29 @@
 	function functionPress(name)
 	{
 		let svg = $("div#teletextscreen").find("svg");
+		let currentSubpageIndex = parseInt(svg.find("g.current-subpage").data("subpageIndex"));
+		let totalSubpageNumber = svg.find("g.subpage").length;
 				
 		switch (name)
 		{
 			case "hold":
-				let searchPageNumberElement = svg.find("tspan#searchPageNumber");
-				if (searchPageNumberElement.html() == "HOLD&nbsp;&nbsp;&nbsp;&nbsp;")
-				{
-					searchPageNumberElement.html("P" + searchDisplayedPageNumber + "&nbsp;&nbsp;&nbsp;&nbsp;");
-					//if (svg.find("g").length > 1) pageRotation(svg.attr("id"), initialSubpageIndex(svg.find("g.subpage").length, svg.find("g.current-subpage").data("subpageCycleTime") * 1000), true);
-					pageRotation(svg.attr("id"), initialSubpageIndex(svg.find("g.subpage").length, svg.find("g.current-subpage").data("subpageCycleTime") * 1000), true); //loop anyway, for world clock to run, even if only one page
-					loadNewTeletextPageIntoBuffer(true);
-					refreshCurrentTeletextPageTimeout = setTimeout(function() { loadNewTeletextPageIntoBuffer(true); }, 300000);
-				}
-				else
-				{
-					searchPageNumberElement.html("HOLD&nbsp;&nbsp;&nbsp;&nbsp;");
-					clearTimeout(pageRotationTimeout);
-					clearTimeout(refreshCurrentTeletextPageTimeout);
+				if (!browsableSubpages) {
+					let searchPageNumberElement = svg.find("tspan#searchPageNumber");
+					if (searchPageNumberElement.html() == "HOLD&nbsp;&nbsp;&nbsp;&nbsp;")
+					{
+						//searchPageNumberElement.html("P" + searchDisplayedPageNumber + "&nbsp;&nbsp;&nbsp;&nbsp;");
+						updateSearchPageNumberInHeader();
+						//if (svg.find("g").length > 1) pageRotation(svg.attr("id"), initialSubpageIndex(svg.find("g.subpage").length, svg.find("g.current-subpage").data("subpageCycleTime") * 1000), true);
+						pageRotation(svg.attr("id"), initialSubpageIndex(svg.find("g.subpage").length, svg.find("g.current-subpage").data("subpageCycleTime") * 1000), true); //loop anyway, for world clock to run, even if only one page
+						loadNewTeletextPageIntoBuffer(true);
+						refreshCurrentTeletextPageTimeout = setTimeout(function() { loadNewTeletextPageIntoBuffer(true); }, 300000);
+					}
+					else
+					{
+						searchPageNumberElement.html("HOLD&nbsp;&nbsp;&nbsp;&nbsp;");
+						clearTimeout(pageRotationTimeout);
+						clearTimeout(refreshCurrentTeletextPageTimeout);
+					}
 				}
 				break;
 			case "reveal":
@@ -670,6 +630,18 @@
 					window.location.href = "/teletext/viewer/?" + urlParams.toString().replace(/=&/g, "&").replace(/=$/, "");
 					break;
 				}
+			case "previousSubpage":
+				let previousSubpageIndex = currentSubpageIndex - 1;
+				if (previousSubpageIndex < 0) previousSubpageIndex = totalSubpageNumber - 1;
+				pageRotation(svg.attr("id"), previousSubpageIndex, false);
+				updateSearchPageNumberInHeader();
+				break;
+			case "nextSubpage":
+				let nextSubpageIndex = currentSubpageIndex + 1;
+				if (nextSubpageIndex >= totalSubpageNumber) nextSubpageIndex = 0;
+				pageRotation(svg.attr("id"), nextSubpageIndex, false);
+				updateSearchPageNumberInHeader();
+				break;
 			case "mute":
 				if ($("audio")[0].paused) {
 					if (!music_player.src) music_player.src = audioFiles[audioFilesIndex];
@@ -803,28 +775,28 @@
 			echo <<<STR
 				<div id="teletextremote">
 					<div id="remotebuttoncontainer">
-						<div class="remotebutton">1</div>
-						<div class="remotebutton">2</div>
-						<div class="remotebutton">3</div>
-						<div class="remotebutton">4</div>
-						<div class="remotebutton">5</div>
-						<div class="remotebutton">6</div>
-						<div class="remotebutton">7</div>
-						<div class="remotebutton">8</div>
-						<div class="remotebutton">9</div>
-						<div class="remotebuttongap"></div>
-						<div class="remotebutton">0</div>
-						<div class="remotebuttongap"></div>
+						<div class="remote-button remote-button-number">1</div>
+						<div class="remote-button remote-button-number">2</div>
+						<div class="remote-button remote-button-number">3</div>
+						<div class="remote-button remote-button-number">4</div>
+						<div class="remote-button remote-button-number">5</div>
+						<div class="remote-button remote-button-number">6</div>
+						<div class="remote-button remote-button-number">7</div>
+						<div class="remote-button remote-button-number">8</div>
+						<div class="remote-button remote-button-number">9</div>
+						<div class="remote-button-gap"></div>
+						<div class="remote-button remote-button-number">0</div>
+						<div class="remote-button-gap"></div>
 
 						<div class="remoteverticalspacer"></div>
 
-						<div class="fastextbutton" style="background-image: linear-gradient(red, brown);" data-name="red"></div>
-						<div class="fastextbutton" style="background-image: linear-gradient(lightgreen, green);" data-name="green"></div>
-						<div class="fastextbutton" style="background-image: linear-gradient(yellow, orange);" data-name="yellow"></div>
-						<div class="fastextbutton" style="background-image: linear-gradient(blue, darkblue);" data-name="blue"></div>
+						<div class="remote-button remote-button-fastext" style="background-image: linear-gradient(red, brown);" data-name="red"></div>
+						<div class="remote-button remote-button-fastext" style="background-image: linear-gradient(lightgreen, green);" data-name="green"></div>
+						<div class="remote-button remote-button-fastext" style="background-image: linear-gradient(yellow, orange);" data-name="yellow"></div>
+						<div class="remote-button remote-button-fastext" style="background-image: linear-gradient(blue, darkblue);" data-name="blue"></div>
 						
-						<div class="functionbutton" data-name="reveal">?</div>
-						<div class="functionbutton" data-name="hold">
+						<div class="remote-button remote-button-function" data-name="reveal">?</div>
+						<div class="remote-button remote-button-function" data-name="hold">
 							<svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" fill="currentColor" viewBox="0 0 21 21" style="pointer-events: none;">
 								<g fill-rule="evenodd" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 1)">
 								<path d="m4.5 4.5 3 3 3-3"/>
@@ -833,8 +805,8 @@
 								</g>
 							</svg>
 						</div>
-						<div class="functionbutton" data-name="index">i</div>
-						<div class="functionbutton" data-name="size">
+						<div class="remote-button remote-button-function" data-name="index">i</div>
+						<div class="remote-button remote-button-function" data-name="size">
 							<svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" fill="currentColor" viewBox="0 0 21 21" style="pointer-events: none;">
 								<g fill-rule="evenodd" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 1)">
 								<path d="m4.5 12.5 3 3 3-3"/>
@@ -844,11 +816,24 @@
 							</svg>
 						</div>
 
-						<div class="remoteverticalspacer"></div>
+						
+			STR;
+			
+			if (isset($_GET['browsableSubpages']))
+			{
+				echo <<<STR
+						<div class="remote-button remote-button-function" data-name="previousSubpage">S-</div>
+						<div class="remote-button remote-button-function" data-name="nextSubpage">S+</div>
+						<div class="remote-button remote-button-function-gap"></div>
+						<div class="remote-button remote-button-function-gap"></div>
+				STR;
+			}
+			
+			echo <<<STR
 					</div>
 					
 					<div id="remoteextrabuttoncontainer">
-						<div class="remoteextrabutton" data-name="mute">
+						<div class="remote-button remote-button-extra" data-name="mute">
 							<svg id="volume-xmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="currentColor" style="pointer-events: none;">
 								<!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
 								<path d="M301.1 34.8C312.6 40 320 51.4 320 64l0 384c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352 64 352c-35.3 0-64-28.7-64-64l0-64c0-35.3 28.7-64 64-64l67.8 0L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3zM425 167l55 55 55-55c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-55 55 55 55c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-55-55-55 55c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l55-55-55-55c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"/>
@@ -858,13 +843,13 @@
 								<path d="M533.6 32.5C598.5 85.2 640 165.8 640 256s-41.5 170.7-106.4 223.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C557.5 398.2 592 331.2 592 256s-34.5-142.2-88.7-186.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM473.1 107c43.2 35.2 70.9 88.9 70.9 149s-27.7 113.8-70.9 149c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C475.3 341.3 496 301.1 496 256s-20.7-85.3-53.2-111.8c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zm-60.5 74.5C434.1 199.1 448 225.9 448 256s-13.9 56.9-35.4 74.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C393.1 284.4 400 271 400 256s-6.9-28.4-17.7-37.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM301.1 34.8C312.6 40 320 51.4 320 64l0 384c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352 64 352c-35.3 0-64-28.7-64-64l0-64c0-35.3 28.7-64 64-64l67.8 0L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3z"/>
 							</svg>
 						</div>
-						<div id="exportCurrentPageAsImageButton" class="remoteextrabutton" title="Download a PNG of the current page" alt="Download a PNG of the current page">
+						<div id="exportCurrentPageAsImageButton" class="remote-button remote-button-extra" title="Download a PNG of the current page" alt="Download a PNG of the current page">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="pointer-events: none;">
 							  <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
 							  <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
 							</svg>
 						</div>
-						<div class="remoteextrabuttongap">
+						<div class="remote-button-extra-gap">
 						</div>
 					</div>
 				</div>
@@ -973,6 +958,14 @@
 				case "]":
 					functionPress("nextService");
 					break;
+				case "<":
+				case ",":
+					if (browsableSubpages) functionPress("previousSubpage");
+					break;
+				case ">":
+				case ".":
+					if (browsableSubpages) functionPress("nextSubpage");
+					break;
 				default:
 					break;
 			}
@@ -1053,16 +1046,16 @@
 		getServiceList();
 		initialiseTeletext();
 			
-		$("div.remotebutton:not([data-name])").on("click", function(e) {				
+		$("div.remote-button-number:not([data-name])").on("click", function(e) {				
 			let buttonLabel = e.target.innerHTML;
 			digitPress(buttonLabel);
 		});
 		
-		$("div.fastextbutton").on("click", function(e) {				
+		$("div.remote-button-fastext").on("click", function(e) {				
 			fastextPress($(e.target).data("name"));
 		});
 		
-		$("div.functionbutton, div.remotebutton[data-name], div.remoteextrabutton[data-name]").on("click", function(e) {
+		$("div.remote-button-function, div.remote-button-number[data-name], div.remote-button-extra[data-name]").on("click", function(e) {
 			functionPress($(e.target).data("name"));
 		});
 		
