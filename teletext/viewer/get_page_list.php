@@ -38,6 +38,8 @@
 		$recovery = isset($_GET['recovery']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', trim($_GET['recovery'])) : null;
 		$magazine = isset($_GET['magazine']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', trim($_GET['magazine'])) : "";
 		$repeatIndexPage = !isset($_GET['noRepeatIndex']);
+		$groupByMagazine = !isset($_GET['ungrouped']);
+		$includeHexPages = !isset($_GET['onlyNumeric']);
 		
 		if (($recovery != null || $service != "") && $magazine != "")
 		{
@@ -45,7 +47,7 @@
 			if (count($files) == 0) throw new Exception();
 			//echo implode("<br>",$files);
 			//$regex = "/P([0-9A-F]{3})[^0-9]?.*\.tti/i";
-			$regex = "/([1-8]{1}[0-9A-F]{1}[0-9A-F]{1}).*\.(tti|bin)/i";
+			$regex = $includeHexPages ? "/([1-8]{1}[0-9A-F]{1}[0-9A-F]{1}).*\.(tti|bin)/i" : "/([1-8]{1}[0-9]{1}[0-9]{1}).*\.(tti|bin)/i";
 			
 			$pageNumbers = [];
 			
@@ -79,7 +81,7 @@
 		{
 			$files = $recovery ? glob("../recoveries/" . $recovery . "/*.{tti,bin}", GLOB_BRACE) : glob("../services/" . $service . "/*.{tti,bin}", GLOB_BRACE);
 			if (count($files) == 0) throw new Exception();
-			$regex = "/([1-8]{1}[0-9A-F]{1}[0-9A-F]{1}).*\.(tti|bin)/i";
+			$regex = $includeHexPages ? "/([1-8]{1}[0-9A-F]{1}[0-9A-F]{1}).*\.(tti|bin)/i" : "/([1-8]{1}[0-9]{1}[0-9]{1}).*\.(tti|bin)/i";
 			
 			$allPageNumbersByMagazine = [];
 			$allPageNumbersByMagazine[1] = [];
@@ -115,9 +117,29 @@
 				}
 			}
 			
-			header("Content-Type: application/json");
-			echo json_encode($allPageNumbersByMagazine);
-			exit();
+			if ($groupByMagazine)
+			{
+				header("Content-Type: application/json");
+				echo json_encode($allPageNumbersByMagazine);
+				exit();
+			}
+			else
+			{
+				$allPageNumbersUngrouped = array_merge(
+					$allPageNumbersByMagazine[1],
+					$allPageNumbersByMagazine[2],
+					$allPageNumbersByMagazine[3],
+					$allPageNumbersByMagazine[4],
+					$allPageNumbersByMagazine[5],
+					$allPageNumbersByMagazine[6],
+					$allPageNumbersByMagazine[7],
+					$allPageNumbersByMagazine[8]
+				);
+				
+				header("Content-Type: application/json");
+				echo json_encode($allPageNumbersUngrouped);
+				exit();
+			}
 		}
 		else
 		{

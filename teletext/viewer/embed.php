@@ -195,17 +195,7 @@
 						max-width: 340px;
 						flex-wrap: wrap;
 						margin: 0 auto;
-						padding: 0 0 0 6px;
 					}
-					
-					#remotebuttoncontainer {
-						justify-content: left;
-					}
-					
-					#remoteextrabuttoncontainer {
-						justify-content: right;
-						margin: -11% 0 0 -3%;
-					}				
 				}
 			STR;
 		}
@@ -297,9 +287,11 @@
 	var currentPageNumber = page;
 	var searchPageNumber = page;
 	var searchDisplayedPageNumber = page;
+	var lastCompleteSearchPageNumber = page;
 	var showSubpageNumber = true;
 	
 	var pageListBuffer = null;
+	var pageListUngroupedBuffer = null;
 	var serviceListBuffer = null;
 	var currentServiceIndex = 0;
 	
@@ -310,6 +302,7 @@
 	var pageSearchIndex = 0;
 	
 	var pageListTimeout = null;
+	var pageListUngroupedTimeout = null;
 	var serviceListTimeout = null;
 	var refreshCurrentTeletextPageTimeout = null;
 	var continuePageSearchTimeout = null;
@@ -321,6 +314,7 @@
 	var xhrInitialiseTeletext;
 	var xhrRefreshHeaderBeforePageSearch;
 	var xhrGetPageList;
+	var xhrGetPageListUngrouped;
 	var xhrGetServiceList;
 	//var xhrLoadNewTeletextPage;
 	var xhrLoadNewTeletextPageIntoBuffer;
@@ -494,6 +488,7 @@
 	{
 		searchPageNumber = currentPageNumber;
 		searchDisplayedPageNumber = currentPageNumber;
+		lastCompleteSearchPageNumber = currentPageNumber;
 		showSubpageNumber = true;
 		//$("tspan#searchPageNumber").html("P" + currentPageNumber + "&nbsp;&nbsp;&nbsp;&nbsp;");
 		updateSearchPageNumberInHeader();
@@ -527,6 +522,7 @@
 				cancelPageSearch();
 				searchPageNumber = searchPageNumber + "" + digit;
 				searchDisplayedPageNumber = searchPageNumber;
+				lastCompleteSearchPageNumber = searchPageNumber;
 				beginPageSearch(false);
 				break;
 			default:
@@ -544,6 +540,8 @@
 			cancelPageSearch();
 			searchPageNumber = fastextSearchPageNumber;
 			searchDisplayedPageNumber = searchPageNumber;
+			lastCompleteSearchPageNumber = searchPageNumber;
+			showSubpageNumber = false;
 			updateSearchPageNumberInHeader();
 			beginPageSearch(false);
 		}
@@ -552,6 +550,7 @@
 	function functionPress(name)
 	{
 		let svg = $("div#teletextscreen").find("svg");
+		let currentPageIndex = pageListUngroupedBuffer.indexOf(lastCompleteSearchPageNumber);
 		let currentSubpageIndex = parseInt(svg.find("g.current-subpage").data("subpageIndex"));
 		let totalSubpageNumber = svg.find("g.subpage").length;
 				
@@ -642,6 +641,28 @@
 				pageRotation(svg.attr("id"), nextSubpageIndex, false);
 				updateSearchPageNumberInHeader();
 				break;
+			case "previousPage":
+				let previousPageIndex = currentPageIndex - 1;
+				if (previousPageIndex < 0) previousPageIndex = pageListUngroupedBuffer.length - 1;
+				cancelPageSearch();
+				searchPageNumber = pageListUngroupedBuffer[previousPageIndex];
+				searchDisplayedPageNumber = searchPageNumber;
+				lastCompleteSearchPageNumber = searchPageNumber;
+				showSubpageNumber = false;
+				updateSearchPageNumberInHeader();
+				beginPageSearch(false);
+				break;
+			case "nextPage":
+				let nextPageIndex = currentPageIndex + 1;
+				if (nextPageIndex >= pageListUngroupedBuffer.length) nextPageIndex = 0;
+				cancelPageSearch();
+				searchPageNumber = pageListUngroupedBuffer[nextPageIndex];
+				searchDisplayedPageNumber = searchPageNumber;
+				lastCompleteSearchPageNumber = searchPageNumber;
+				showSubpageNumber = false;
+				updateSearchPageNumberInHeader();
+				beginPageSearch(false);
+				break;
 			case "mute":
 				if ($("audio")[0].paused) {
 					if (!music_player.src) music_player.src = audioFiles[audioFilesIndex];
@@ -672,6 +693,7 @@
 			success: function (response) {
 				$("div#teletextscreen").html(response.rootElement.outerHTML);
 				getPageList(true);
+				getPageListUngrouped();
 			},
 			error: function (response) {
 				if (response.status != "404" && response.status != "500") initialiseTeletext();
@@ -723,6 +745,26 @@
 			},
 			error: function () {
 				getPageList(startSearchOnLoad);
+			},
+			timeout: 3000,
+		});
+	}
+	
+	function getPageListUngrouped()
+	{
+		if (xhrGetPageListUngrouped) xhrGetPageListUngrouped.abort();
+		
+		xhrGetPageListUngrouped = $.ajax({
+			type: "GET",
+			url: "/teletext/viewer/get_page_list.php",
+			data: { service: service, recovery: recovery, noRepeatIndex: null, ungrouped: null, onlyNumeric: null },
+			success: function (response) {
+				clearTimeout(pageListUngroupedTimeout);
+				pageListUngroupedBuffer = response;
+				pageListUngroupedTimeout = setTimeout(function () { getPageListUngrouped(false); }, 60000);
+			},
+			error: function () {
+				getPageListUngrouped();
 			},
 			timeout: 3000,
 		});
@@ -822,10 +864,10 @@
 			if (isset($_GET['browsableSubpages']))
 			{
 				echo <<<STR
+						<div class="remote-button remote-button-function" data-name="previousPage">P-</div>
+						<div class="remote-button remote-button-function" data-name="nextPage">P+</div>
 						<div class="remote-button remote-button-function" data-name="previousSubpage">S-</div>
 						<div class="remote-button remote-button-function" data-name="nextSubpage">S+</div>
-						<div class="remote-button remote-button-function-gap"></div>
-						<div class="remote-button remote-button-function-gap"></div>
 				STR;
 			}
 			
@@ -958,12 +1000,20 @@
 				case "]":
 					functionPress("nextService");
 					break;
+				case "arrowdown":
+					functionPress("previousPage");
+					break;
+				case "arrowup":
+					functionPress("nextPage");
+					break;
 				case "<":
 				case ",":
+				case "arrowleft":
 					if (browsableSubpages) functionPress("previousSubpage");
 					break;
 				case ">":
 				case ".":
+				case "arrowright":
 					if (browsableSubpages) functionPress("nextSubpage");
 					break;
 				default:
